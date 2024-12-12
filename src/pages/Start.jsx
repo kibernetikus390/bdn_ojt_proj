@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react
 export default function Start(){
     const navigate = useNavigate();
     const handleClickStart = () => {
-      navigate("/quiz");
+      navigate("/quiz", {state:{num:10, quiz:undefined}});
     };
     return (
       <>
