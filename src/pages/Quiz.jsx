@@ -46,37 +46,21 @@ export default function Quiz({route, num = 10, quiz}){
         location.state = undefined;
     }
 
-    // (async function testfetch(){ 
-    //     const url = 'https://wordsapiv1.p.rapidapi.com/words/?random=true';
-    //     const options = {
-    //         method: 'GET',
-    //         headers: {
-    //             'x-rapidapi-key': '39ee9a1cb0msha51bcc68aa46a4dp1a6309jsn2f9725ab872c',
-    //             'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com'
-    //         }
-    //     };
-        
-    //     try {
-    //         const response = await fetch(url, options);
-    //         const result = await response.text();
-    //         console.log(result);
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // })();
-
     //出題数
     //const [numQuiz, setNumQuiz] = useState(num);
+    const [loading, setLoading] = useState(true);
     // 現在の問題番号
     const [currentIndex, setCurrentIndex] = useState(0);
     // 出題一覧[{word,definition}]
     const [quizSet, setQuizSet] = useState(quiz?quiz:generateQuizSet(num));
-    // 選択肢(出題一覧のインデックス)の配列
-    let optionSet = generateOptionSet(currentIndex);
+    const [quizSetFetch, setQuizSetFetch] = useState();
+    const [numFetched, setNumFetched] = useState(0);
     // ステート：リザルト画面か？
     const [result, setResult] = useState(false);
     // 正答・誤答の配列
     const [results, setResults] = useState(generateResults(quizSet.length));
+    // 選択肢(出題一覧のインデックス)の配列
+    let optionSet = loading ? undefined : generateOptionSet(currentIndex);
 
     //　スタートページへのナビゲート
     const navigate = useNavigate();
@@ -164,30 +148,78 @@ export default function Quiz({route, num = 10, quiz}){
     // useEffect(()=>{
     // }, [currentIndex]);
 
+    useEffect(()=>{
+        const testFetch = async () => {
+            let newQuizSet = [];
+            //await new Promise(resolve=>setTimeout(resolve,3000));
+        
+            const url = 'https://wordsapiv1.p.rapidapi.com/words/?random=true';
+            const options = {
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-key': '39ee9a1cb0msha51bcc68aa46a4dp1a6309jsn2f9725ab872c',
+                    'x-rapidapi-host': 'wordsapiv1.p.rapidapi.com'
+                }
+            };
+            
+            while(newQuizSet.length < num){
+                try {
+                    const response = await fetch(url, options);
+                    const result = await response.text();
+                    const dic = JSON.parse(result);
+                    // console.log("fetched : " + dic);
+                    if(dic?.word && dic?.results){
+                        if(dic.results[0]?.definition){
+                            // console.log("valid data: " + dic.word + " : " + dic.results[0].definition);
+                            newQuizSet.push({word:dic.word, definition:dic.results[0].definition});
+                            setNumFetched(newQuizSet.length);
+                            continue;
+                        }
+                    }
+
+                } catch (error) {
+                    console.error(error);
+                    navigate("/");
+                    break;
+                }
+                //await new Promise(resolve=>setTimeout(resolve,10));
+            }
+        
+            console.log(newQuizSet);
+            setQuizSet(newQuizSet);
+            setLoading(false);
+        }
+        testFetch();
+    },[num]);
+
     return (
       <>
-        {!result ? 
-            <>
-                <p>index : {currentIndex}</p>
-                <Progress results={results} currentIndex={currentIndex}/>
-                <h1>{quizSet[currentIndex].word}</h1>
-                { optionSet.map( (v,i)=>{ 
-                    console.log("rendering options : " + v + " " + i);
-                    return <Option key={i} id={v} text={quizSet[v].definition} handleClick={handleClickOption} /> 
-                } ) }
-            </>
-        : null }
-        {result ? 
-            <>
-                <h1>result</h1>
-                <Progress results={results} currentIndex={currentIndex+1}/>
-                <ResultList results={results} quiz={quizSet}/>
-                <button onClick={handleClickBackToStart}>戻る</button>
-                {
-                    results.includes(false) ? <button onClick={handleClickRevenge}>間違えた問題をリトライ</button> : null
-                }
-            </>
-         : null} 
+
+        {loading ? 
+            <p>loading...{`${numFetched} / ${num}`}</p>
+            :
+            (!result ? 
+                <>
+                    <p>index : {currentIndex}</p>
+                    <Progress results={results} currentIndex={currentIndex}/>
+                    <h1>{quizSet[currentIndex].word}</h1>
+                    { optionSet.map( (v,i)=>{ 
+                        console.log("rendering options : " + v + " " + i);
+                        return <Option key={i} id={v} text={quizSet[v].definition} handleClick={handleClickOption} /> 
+                    } ) }
+                </>
+            : 
+                <>
+                    <h1>result</h1>
+                    <Progress results={results} currentIndex={currentIndex+1}/>
+                    <ResultList results={results} quiz={quizSet}/>
+                    <button onClick={handleClickBackToStart}>戻る</button>
+                    {
+                        results.includes(false) ? <button onClick={handleClickRevenge}>間違えた問題をリトライ</button> : null
+                    }
+                </>
+            )
+        }
       </>
     );
   };

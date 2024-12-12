@@ -115,7 +115,86 @@ const qs = [
     {
        "word":"wetter",
        "definition":"a chemical agent capable of reducing the surface tension of a liquid in which it is dissolved"
+    },
+    {
+       "word":"ulnar artery",
+       "definition":"large artery that branches from the brachial artery to supply the muscles of the forearm and wrist and hand"
+    },
+    {
+       "word":"family ebenaceae",
+       "definition":"fruit and timber trees of tropical and warm regions including ebony and persimmon"
+    },
+    {
+       "word":"isotope",
+       "definition":"one of two or more atoms with the same atomic number but with different numbers of neutrons"
+    },
+    {
+       "word":"villein",
+       "definition":"(Middle Ages) a person who is bound to the land and owned by the feudal lord"
+    },
+    {
+       "word":"merciful",
+       "definition":"showing or giving mercy"
+    },
+    {
+       "word":"zinc sulfate",
+       "definition":"a colorless water-soluble powder; used as a mordant or to preserve wood or for the electrodeposition of zinc"
+    },
+    {
+       "word":"decerebrate",
+       "definition":"remove the cerebrum from (a human body)"
+    },
+    {
+       "word":"fir cone",
+       "definition":"the seed-producing cone of a fir tree"
+    },
+    {
+       "word":"unwitting",
+       "definition":"not done with purpose or intent"
+    },
+    {
+       "word":"unremitting",
+       "definition":"uninterrupted in time and indefinitely long continuing"
+    },
+    {
+        "word": "mythologist",
+        "definition": "an expert on mythology"
+    },
+    {
+        "word": "right stage",
+        "definition": "the part of the stage on the actor's right as the actor faces the audience"
+    },
+    {
+        "word": "genus armillaria",
+        "definition": "genus of edible mushrooms having white spores an annulus and blue juice; some are edible; some cause root rot"
+    },
+    {
+        "word": "melicytus",
+        "definition": "a genus of deciduous shrubs or trees; fruit is a berry; grow in New Zealand and Fiji and Solomon Islands"
+    },
+    {
+        "word": "diana",
+        "definition": "English aristocrat who was the first wife of Prince Charles; her death in an automobile accident in Paris produced intense national mourning (1961-1997)"
+    },
+    {
+        "word": "agateware",
+        "definition": "pottery that is veined and mottled to resemble agate"
+    },
+    {
+        "word": "asian",
+        "definition": "of or relating to or characteristic of Asia or the peoples of Asia or their languages or culture"
+    },
+    {
+        "word": "norm",
+        "definition": "a statistic describing the location of a distribution"
+    },
+    {
+        "word": "rung",
+        "definition": "one of the crosspieces that form the steps of a ladder"
+    },
+    {
+        "word": "sitting trot",
+        "definition": "the rider sits still in the saddle"
     }
  ];
-
  export default qs;
