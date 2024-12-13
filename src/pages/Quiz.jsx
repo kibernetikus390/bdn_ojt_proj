@@ -73,6 +73,7 @@ export default function Quiz({route, num = 10, quiz}){
     }
 
     // 選択肢({word,definition}を生成)
+    // 重複防止
     function generateOptions (q) {
         let allQuiz = [...quizSet, ...qs];
         let newOptions = [];
@@ -85,7 +86,7 @@ export default function Quiz({route, num = 10, quiz}){
         if( !newOptions.some(item => item.word === q.word ) ){
             newOptions[ Math.floor( Math.random() * 4 ) ] = {word:q.word, definition:q.definition};
         }
-        console.log("generateOptions : " + JSON.stringify(newOptions));
+        //console.log("generateOptions : " + JSON.stringify(newOptions));
         return newOptions;
     }
 
@@ -121,7 +122,8 @@ export default function Quiz({route, num = 10, quiz}){
         console.log("clicked on : "+ e.target.dataset.key);
 
         let isCorrect = false;
-        if(e.target.dataset.key == currentIndex)
+        // if(e.target.dataset.key == currentIndex)
+        if(e.target.dataset.key == quizSet[currentIndex].word)
         {
             isCorrect = true;
         }
@@ -220,10 +222,14 @@ export default function Quiz({route, num = 10, quiz}){
                     <p>index : {currentIndex}</p>
                     <Progress results={results} currentIndex={currentIndex}/>
                     <h1>{quizSet[currentIndex].word}</h1>
-                    { optionSet.map( (v,i)=>{ 
+                    { options.map( (o,i)=>{ 
+                        console.log(`rendering op [${i}] : word:${o.word} definition:${o.definition} (${o.word==quizSet[currentIndex].word})`);
+                        return <Option key={i} id={o.word} text={o.definition} handleClick={handleClickOption} /> 
+                    } ) }
+                    {/* { optionSet.map( (v,i)=>{ 
                         console.log("rendering options : " + v + " " + i);
                         return <Option key={i} id={v} text={quizSet[v].definition} handleClick={handleClickOption} /> 
-                    } ) }
+                    } ) } */}
                 </>
             : 
                 <>
