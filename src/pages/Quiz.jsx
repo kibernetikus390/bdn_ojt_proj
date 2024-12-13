@@ -53,7 +53,6 @@ export default function Quiz({route, num = 10, quiz}){
     const [currentIndex, setCurrentIndex] = useState(0);
     // 出題一覧[{word,definition}]
     const [quizSet, setQuizSet] = useState(quiz?quiz:generateQuizSet(num));
-    const [quizSetFetch, setQuizSetFetch] = useState();
     const [numFetched, setNumFetched] = useState(0);
     // ステート：リザルト画面か？
     const [result, setResult] = useState(false);
@@ -61,6 +60,7 @@ export default function Quiz({route, num = 10, quiz}){
     const [results, setResults] = useState(generateResults(quizSet.length));
     // 選択肢(出題一覧のインデックス)の配列
     let optionSet = loading ? undefined : generateOptionSet(currentIndex);
+    let options = loading ? undefined : generateOptions(quizSet[currentIndex]);
 
     //　スタートページへのナビゲート
     const navigate = useNavigate();
@@ -70,6 +70,23 @@ export default function Quiz({route, num = 10, quiz}){
 
     function generateResults ( num ) {
         return Array(num).fill(false);
+    }
+
+    // 選択肢({word,definition}を生成)
+    function generateOptions (q) {
+        let allQuiz = [...quizSet, ...qs];
+        let newOptions = [];
+        for(let i = 0; i < 4; i++){
+            let randomIndex = Math.floor( Math.random() * allQuiz.length );
+            let option = allQuiz.splice(randomIndex,1);
+            newOptions.push( option[0] );
+        }
+        //正答を挿入
+        if( !newOptions.some(item => item.word === q.word ) ){
+            newOptions[ Math.floor( Math.random() * 4 ) ] = {word:q.word, definition:q.definition};
+        }
+        console.log("generateOptions : " + JSON.stringify(newOptions));
+        return newOptions;
     }
 
     // 出題一覧を生成
